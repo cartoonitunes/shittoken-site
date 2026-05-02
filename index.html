@@ -1,91 +1,351 @@
-<html>
-   <head>
-      <title>ShitToken - Get In Early</title>
-      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-      <link rel="apple-touch-icon" sizes="57x57" href="./apple-icon-57x57.png">
-      <link rel="apple-touch-icon" sizes="60x60" href="./apple-icon-60x60.png">
-      <link rel="apple-touch-icon" sizes="72x72" href="./apple-icon-72x72.png">
-      <link rel="apple-touch-icon" sizes="76x76" href="./apple-icon-76x76.png">
-      <link rel="apple-touch-icon" sizes="114x114" href="./apple-icon-114x114.png">
-      <link rel="apple-touch-icon" sizes="120x120" href="./apple-icon-120x120.png">
-      <link rel="apple-touch-icon" sizes="144x144" href="./apple-icon-144x144.png">
-      <link rel="apple-touch-icon" sizes="152x152" href="./apple-icon-152x152.png">
-      <link rel="apple-touch-icon" sizes="180x180" href="./apple-icon-180x180.png">
-      <link rel="icon" type="image/png" sizes="192x192"  href="./android-icon-192x192.png">
-      <link rel="icon" type="image/png" sizes="32x32" href="./favicon-32x32.png">
-      <link rel="icon" type="image/png" sizes="96x96" href="./favicon-96x96.png">
-      <link rel="icon" type="image/png" sizes="16x16" href="./favicon-16x16.png">
-      <link rel="manifest" href="./manifest.json">
-      <meta name="msapplication-TileColor" content="#ffffff">
-      <meta name="msapplication-TileImage" content="./ms-icon-144x144.png">
-      <meta name="theme-color" content="#ffffff">
-   </head>
-   <script> 
-      function getBalance(){
-      
-      var URL = "https://etherchain.org/api/account/0xdbd98373c5152963ae9940e0477f078bd28ac411";
-      
-      $.getJSON(URL, function (json) {
-      
-      console.log(json.data[0].balance / 1000000000000000000)
-      
-      $('#ETH').text(json.data[0].balance / 1000000000000000000)
-      
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ShitToken - Get In Early</title>
+<link rel="icon" type="image/svg+xml" href='data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y=".9em" font-size="90">%F0%9F%92%A9</text></svg>'>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Inter:wght@300;400;600;700&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: #0a0a0a;
+    color: #e0e0e0;
+    font-family: 'Inter', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  .grain {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    pointer-events: none;
+    opacity: 0.03;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    z-index: 9999;
+  }
+
+  .container {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 80px 24px;
+    text-align: center;
+  }
+
+  .logo {
+    width: 160px;
+    height: 160px;
+    margin: 0 auto 40px;
+    background: linear-gradient(135deg, #8B6914 0%, #6B4F10 50%, #4a3508 100%);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 80px;
+    box-shadow: 0 0 60px rgba(139, 105, 20, 0.3), 0 0 120px rgba(139, 105, 20, 0.1);
+    animation: float 6s ease-in-out infinite;
+    position: relative;
+  }
+
+  .logo::after {
+    content: '';
+    position: absolute;
+    inset: -3px;
+    border-radius: 50%;
+    border: 1px solid rgba(139, 105, 20, 0.4);
+  }
+
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+  }
+
+  h1 {
+    font-family: 'Space Mono', monospace;
+    font-size: 2.8rem;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    margin-bottom: 48px;
+    background: linear-gradient(180deg, #ffffff 0%, #888888 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .manifesto p {
+    font-size: 1.1rem;
+    line-height: 1.8;
+    color: #999;
+    margin-bottom: 12px;
+    font-weight: 300;
+  }
+
+  .manifesto p strong {
+    color: #ccc;
+    font-weight: 600;
+  }
+
+  .divider {
+    width: 40px;
+    height: 1px;
+    background: #333;
+    margin: 48px auto;
+  }
+
+  .stats {
+    display: flex;
+    justify-content: center;
+    gap: 48px;
+    margin-bottom: 16px;
+  }
+
+  .stat {
+    text-align: center;
+  }
+
+  .stat-value {
+    font-family: 'Space Mono', monospace;
+    font-size: 2rem;
+    font-weight: 700;
+    color: #fff;
+  }
+
+  .stat-label {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: #555;
+    margin-top: 4px;
+  }
+
+  .price {
+    font-family: 'Space Mono', monospace;
+    font-size: 1.4rem;
+    color: #8B6914;
+    margin: 32px 0;
+  }
+
+  .contract-box {
+    background: #111;
+    border: 1px solid #222;
+    border-radius: 12px;
+    padding: 24px;
+    margin: 32px 0;
+  }
+
+  .contract-label {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    color: #555;
+    margin-bottom: 8px;
+  }
+
+  .contract-address {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.8rem;
+    color: #8B6914;
+    word-break: break-all;
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+
+  .contract-address:hover {
+    color: #c49b1a;
+  }
+
+  .buy-section {
+    margin: 48px 0;
+  }
+
+  .buy-btn {
+    display: inline-block;
+    padding: 16px 48px;
+    background: transparent;
+    border: 1px solid #8B6914;
+    color: #8B6914;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.9rem;
+    letter-spacing: 0.1em;
+    text-decoration: none;
+    border-radius: 8px;
+    transition: all 0.3s;
+    cursor: pointer;
+  }
+
+  .buy-btn:hover {
+    background: #8B6914;
+    color: #0a0a0a;
+    box-shadow: 0 0 30px rgba(139, 105, 20, 0.3);
+  }
+
+  .buy-note {
+    font-size: 0.8rem;
+    color: #444;
+    margin-top: 16px;
+    font-style: italic;
+  }
+
+.footer {
+    margin-top: 80px;
+    padding-top: 32px;
+    border-top: 1px solid #1a1a1a;
+  }
+
+  .footer a {
+    font-size: 0.75rem;
+    color: #333;
+    text-decoration: none;
+    margin: 0 12px;
+    transition: color 0.2s;
+  }
+
+  .footer a:hover {
+    color: #666;
+  }
+
+  .progress-bar {
+    width: 100%;
+    height: 4px;
+    background: #1a1a1a;
+    border-radius: 2px;
+    margin: 16px 0 8px;
+    overflow: hidden;
+  }
+
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #8B6914, #c49b1a);
+    border-radius: 2px;
+    width: 0.66%;
+    transition: width 1s ease;
+  }
+
+  .progress-text {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.75rem;
+    color: #555;
+    text-align: right;
+  }
+
+  @media (max-width: 480px) {
+    .container { padding: 48px 20px; }
+    h1 { font-size: 2rem; }
+    .stats { gap: 32px; }
+    .stat-value { font-size: 1.5rem; }
+    .logo { width: 120px; height: 120px; font-size: 60px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="grain"></div>
+
+<div class="container">
+
+  <div class="logo">&#x1F4A9;</div>
+
+  <h1>SHIT TOKEN</h1>
+
+  <div class="manifesto">
+    <p>No fancy marketing. No hopes and dreams. No promises.</p>
+    <p>There are <strong>151</strong> SHIT tokens, just like Pokemon.</p>
+    <p>SHITs do nothing. Just like most ICOs.</p>
+    <p>Don't send us your money. SHITs are worth nothing.</p>
+    <p><strong>But if you do:</strong></p>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="stats">
+    <div class="stat">
+      <div class="stat-value">151</div>
+      <div class="stat-label">Total Supply</div>
+    </div>
+    <div class="stat">
+      <div class="stat-value">18</div>
+      <div class="stat-label">Decimals</div>
+    </div>
+    <div class="stat">
+      <div class="stat-value" id="claimed">---</div>
+      <div class="stat-label">Claimed</div>
+    </div>
+  </div>
+
+  <div class="progress-bar">
+    <div class="progress-fill" id="progress"></div>
+  </div>
+  <div class="progress-text"><span id="pct">---</span> of supply claimed</div>
+
+  <div class="price">1 SHIT = 0.1 ETH</div>
+
+  <div class="contract-box">
+    <div class="contract-label">Contract Address</div>
+    <a class="contract-address" href="https://etherscan.io/address/0x337Bc91CA04FD03a1eDA22bCe71550C0d928B037" target="_blank">
+      0x337Bc91CA04FD03a1eDA22bCe71550C0d928B037
+    </a>
+  </div>
+
+  <div class="buy-section">
+    <a class="buy-btn" href="https://etherscan.io/address/0x337Bc91CA04FD03a1eDA22bCe71550C0d928B037" target="_blank">
+      VIEW ON ETHERSCAN
+    </a>
+    <p class="buy-note">But don't send us money.</p>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="history" style="text-align: left; max-width: 480px; margin: 0 auto;">
+    <p style="font-size: 0.85rem; color: #666; line-height: 1.8; margin-bottom: 16px;">
+      Deployed July 23, 2017 during the peak of the ICO bubble. The deployer created two versions 19 minutes apart. This contract (0x337B) was the first: a fair-launch mint where nobody holds tokens at deployment, not even the deployer. The second version (0xdbd9) pre-minted everything to the deployer and was the one <a href="./legacy/" style="color: #8B6914;">announced on the original website</a> and <a href="https://bitcointalk.org/index.php?topic=2041542.0" target="_blank" style="color: #8B6914;">BitcoinTalk</a>.
+    </p>
+    <p style="font-size: 0.85rem; color: #666; line-height: 1.8; margin-bottom: 16px;">
+      This is the first version. The better one. Zero pre-mine, zero team allocation. The deployer's balance starts at zero. Source code recovered from raw bytecode by <a href="https://ethereumhistory.com/contract/0x337Bc91CA04FD03a1eDA22bCe71550C0d928B037" target="_blank" style="color: #8B6914;">EthereumHistory</a>.
+    </p>
+  </div>
+
+  <div class="footer">
+    <a href="https://etherscan.io/token/0x337Bc91CA04FD03a1eDA22bCe71550C0d928B037" target="_blank">Etherscan</a>
+    <a href="https://etherscan.io/address/0x337Bc91CA04FD03a1eDA22bCe71550C0d928B037#code" target="_blank">Contract</a>
+    <a href="./legacy/">Original Site</a>
+    <a href="https://ethereumhistory.com/contract/0x337Bc91CA04FD03a1eDA22bCe71550C0d928B037" target="_blank">History</a>
+  </div>
+
+</div>
+
+<script>
+  // Fetch claimed supply from Etherscan-compatible RPC
+  async function updateClaimed() {
+    try {
+      const CONTRACT = '0x337Bc91CA04FD03a1eDA22bCe71550C0d928B037';
+      const resp = await fetch('https://ethereum.publicnode.com', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({
+          jsonrpc: '2.0', id: 1, method: 'eth_call',
+          params: [{to: CONTRACT, data: '0x5afefc09'}, 'latest'] // unclaimedSupply()
+        })
       });
-      
+      const data = await resp.json();
+      if (data.result) {
+        const unclaimed = BigInt(data.result);
+        const total = BigInt('151000000000000000000');
+        const claimed = total - unclaimed;
+        const claimedTokens = Number(claimed) / 1e18;
+        const pct = (Number(claimed) * 100 / Number(total)).toFixed(1);
+        document.getElementById('claimed').textContent = claimedTokens.toFixed(1);
+        document.getElementById('progress').style.width = pct + '%';
+        document.getElementById('pct').textContent = pct + '%';
       }
-      
-   </script>
-   <script>
-  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
-
-  ga('create', 'UA-103012133-1', 'auto');
-  ga('send', 'pageview');
-
+    } catch(e) {
+      console.log('RPC error:', e);
+    }
+  }
+  updateClaimed();
 </script>
-   <body onload="getBalance()">
-      <center>
-         <br><br><br>
-         <img src="./logo.png">
-         <br><br>
-         <h1> SHIT TOKEN </h1>
-         No fancy marketing. No hopes and dreams. No promises. 
-         <br><br>
-         There are 151 SHIT tokens, just like Pokemon. 
-         <br><br>
-         SHITs do nothing. Just like most ICOs. 
-         <br><br>
-         Don't send us your money. SHITs are worth nothing. 
-         <br><br>
-         But if you do: 
-         <br><br>
-         <hr style="width:10%">
-         <br>
-         <b> Contract Address: </b>
-         <br> <br>
-         <a href="https://www.etherscan.io/address/0xdbd98373c5152963ae9940e0477f078bd28ac411">0xdbd98373c5152963ae9940e0477f078bd28ac411</a>
-         <br><br>
-         <b> View Token: </b>
-         <br><br>
-         <a href="https://etherscan.io/token/0xdbd98373c5152963ae9940e0477f078bd28ac411">0xdbd98373c5152963ae9940e0477f078bd28ac411</a>
-         <br><br>
-         <hr style="width:10%">
-         <br>
-         <b> ETH Sent: </b>
-         <br> <br>
-         <span id="ETH"> ??? </span> ETH
-         <br> <br> / 15.1 ETH
-         <br><br>
-         <hr style="width:10%">
-         <br>
-         1 SHIT = 0.1 ETH
-         <br><br>
-         <i style="font-size: 0.3em"> But don't send us money </i>
-         <br><br>
-         <a style="font-size: 0.3em" href="https://bitcointalk.org/index.php?topic=2041542.0">BitcoinTalk</a>
-   </body>
-   </center>
+
+</body>
 </html>
